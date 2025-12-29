@@ -31,17 +31,17 @@ CardVault allows users to scan business cards using their phone camera, extract 
 * Node.js 18+ installed.
 * A free [Supabase](https://supabase.com/) account.
 
-### 2. Install dependencies
+### 1. Install dependencies
 ```bash
 npm install
 ```
 
-### 3. Setup Environment Variables
+### 2. Setup Environment Variables
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
-### 4. Setup Database (Supabase)
+### 3. Setup Database (Supabase)
 * Go to your Supabase Dashboard -> SQL Editor.
 * Run the following SQL query to create the table and allow public access (for MVP):
 ```bash
@@ -68,7 +68,7 @@ using (true)
 with check (true);
 ```
 
-### 5. Run the development server
+### 4. Run the development server
 ```bash
 npm run dev
 ```
