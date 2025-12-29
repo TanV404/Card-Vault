@@ -1,4 +1,4 @@
-# 📇 CardVault - Mobile Business Card Scanner
+# 📇 CardVault - Business Card Scanner
 
 > A privacy-first, zero-cost business card scanner and organizer built for mobile devices.
 
