@@ -9,6 +9,8 @@ export default function Auth({ onLoginSuccess }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -29,7 +31,7 @@ export default function Auth({ onLoginSuccess }) {
         throw new Error(data.error || 'Something went wrong');
       }
 
-      onLoginSuccess(data.user);
+      onLoginSuccess(data.user, isSignUp ? 'signup' : 'login');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -37,9 +39,7 @@ export default function Auth({ onLoginSuccess }) {
     }
   };
 
-  const handleGoogleMock = () => {
-    setError("Google Sign-In requires OAuth configuration (Client ID & Secret). Please sign in using your Email & Password to test this app!");
-  };
+
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-slate-950 px-6 relative overflow-hidden">
@@ -124,22 +124,7 @@ export default function Auth({ onLoginSuccess }) {
           </button>
         </form>
 
-        <div className="relative my-6 flex items-center justify-center">
-          <div className="absolute border-t border-slate-800 w-full"></div>
-          <span className="relative bg-slate-900 px-3 text-xs font-bold text-gray-500 uppercase tracking-wider">or</span>
-        </div>
 
-        <button
-          onClick={handleGoogleMock}
-          className="w-full bg-slate-800 hover:bg-slate-750 border border-slate-700 active:scale-95 text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-sm"
-        >
-          <svg className="h-5 w-5" viewBox="0 0 24 24" width="24" height="24">
-            <g transform="matrix(1, 0, 0, 1, 0, 0)">
-              <path d="M21.35,11.1H12v2.7h5.38C16.88,15.93,14.73,17.2,12,17.2a5.2,5.2,0,1,1,4.92-3.48h2.78A8,8,0,1,0,12,20a7.8,7.8,0,0,0,5.65-2.28C19.78,15.75,21.35,13.43,21.35,11.1Z" fill="#fff" />
-            </g>
-          </svg>
-          Continue with Google
-        </button>
 
         <div className="text-center mt-6 text-sm">
           <span className="text-gray-400">

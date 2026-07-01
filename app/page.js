@@ -306,12 +306,23 @@ export default function MobileScanner() {
 
   if (!user) {
     return (
-      <Auth 
-        onLoginSuccess={(userData) => {
-          setUser(userData);
-          fetchCards();
-        }} 
-      />
+      <div className={`min-h-screen ${COLORS.bgMain} ${COLORS.textMain} font-sans transition-colors duration-300 pb-28`}>
+        <Auth 
+          onLoginSuccess={(userData, type) => {
+            setUser(userData);
+            fetchCards();
+            setToast(null);
+            if (type === 'signup') {
+              showToast("Account created successfully!", "success");
+            } else {
+              showToast("Logged in successfully!", "success");
+            }
+          }} 
+        />
+        <AnimatePresence>
+          {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+        </AnimatePresence>
+      </div>
     );
   }
 
@@ -319,26 +330,30 @@ export default function MobileScanner() {
     <div className={`min-h-screen ${COLORS.bgMain} ${COLORS.textMain} font-sans transition-colors duration-300 pb-28`}>
       
       {/* Header */}
-      <header className={`${COLORS.bgCard}/90 backdrop-blur-md sticky top-0 z-30 border-b ${COLORS.border} px-6 py-4 flex justify-between items-center`}>
-        <div className="flex items-center gap-2">
-          <div className={`${COLORS.primary} p-2 rounded-lg shadow-lg shadow-indigo-500/20`}>
-            <ScanLine className="text-white h-5 w-5" />
+      <header className={`${COLORS.bgCard}/90 backdrop-blur-md sticky top-0 z-30 border-b ${COLORS.border} px-6 py-4`}>
+        <div className="max-w-6xl mx-auto flex justify-between items-center w-full">
+          <div className="flex items-center gap-2">
+            <div className={`${COLORS.primary} p-2 rounded-lg shadow-lg shadow-indigo-500/20`}>
+              <ScanLine className="text-white h-5 w-5" />
+            </div>
+            <h1 className="text-xl font-bold tracking-tight">Card<span className={COLORS.primaryText}>Vault</span></h1>
           </div>
-          <h1 className="text-xl font-bold tracking-tight">Card<span className={COLORS.primaryText}>Vault</span></h1>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex flex-col text-right">
-            <span className="text-xs font-semibold text-gray-400">{user.email}</span>
-          </div>
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-xs text-white">
-            {user.email[0].toUpperCase()}
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex flex-col text-right">
+              <span className="text-xs font-semibold text-gray-400">{user.email}</span>
+            </div>
+            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-xs text-white">
+              {user.email[0].toUpperCase()}
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Panel Content */}
-      <main className="p-6 max-w-xl mx-auto relative">
+      <main className={`p-6 mx-auto relative w-full transition-all duration-300 ${
+        activeTab === 'graph' || activeTab === 'contacts' ? 'max-w-6xl' : 'max-w-2xl'
+      }`}>
         <AnimatePresence mode="wait">
           {activeTab === 'scan' && (
             <motion.div 
@@ -403,7 +418,7 @@ export default function MobileScanner() {
                      <p className={COLORS.textMuted}>Digitize business cards instantly using local OCR</p>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div onClick={() => cameraInputRef.current.click()} className={`relative group cursor-pointer ${COLORS.bgCard} rounded-[2rem] p-6 shadow-xl border ${COLORS.border} flex items-center gap-4 hover:scale-[1.02] transition-all active:scale-95`}>
                       <div className={`h-14 w-14 ${COLORS.primary} rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30`}>
                         <Camera className="h-7 w-7 text-white" />
@@ -549,37 +564,53 @@ export default function MobileScanner() {
       </AnimatePresence>
 
       {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/90 backdrop-blur-xl border-t border-slate-800/80 px-6 py-4 flex justify-around items-center z-40 max-w-md mx-auto rounded-t-3xl shadow-2xl">
+      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/90 backdrop-blur-xl border-t border-slate-800/80 px-6 py-3.5 flex justify-around md:justify-center md:gap-8 items-center z-40 max-w-md md:max-w-2xl lg:max-w-3xl mx-auto rounded-t-3xl shadow-2xl">
         <button 
           onClick={() => { setActiveTab('scan'); setScannedData(null); }}
-          className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${activeTab === 'scan' ? 'text-indigo-400 font-semibold' : 'text-gray-500 hover:text-gray-300'}`}
+          className={`flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-3 py-1.5 md:py-2 md:px-4 rounded-xl cursor-pointer transition-all ${
+            activeTab === 'scan' 
+              ? 'text-indigo-400 font-semibold md:bg-indigo-500/10' 
+              : 'text-gray-500 hover:text-gray-300 md:text-gray-400 md:hover:text-white md:hover:bg-slate-800/50'
+          }`}
         >
-          <Camera size={20} className={activeTab === 'scan' ? 'animate-bounce' : ''} />
-          <span className="text-[10px]">Scan</span>
+          <Camera size={20} className={activeTab === 'scan' ? 'animate-bounce md:animate-none' : ''} />
+          <span className="text-[10px] md:text-sm">Scan</span>
         </button>
 
         <button 
           onClick={() => setActiveTab('contacts')}
-          className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${activeTab === 'contacts' ? 'text-indigo-400 font-semibold' : 'text-gray-500 hover:text-gray-300'}`}
+          className={`flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-3 py-1.5 md:py-2 md:px-4 rounded-xl cursor-pointer transition-all ${
+            activeTab === 'contacts' 
+              ? 'text-indigo-400 font-semibold md:bg-indigo-500/10' 
+              : 'text-gray-500 hover:text-gray-300 md:text-gray-400 md:hover:text-white md:hover:bg-slate-800/50'
+          }`}
         >
           <User size={20} />
-          <span className="text-[10px]">Contacts</span>
+          <span className="text-[10px] md:text-sm">Contacts</span>
         </button>
 
         <button 
           onClick={() => setActiveTab('graph')}
-          className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${activeTab === 'graph' ? 'text-indigo-400 font-semibold' : 'text-gray-500 hover:text-gray-300'}`}
+          className={`flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-3 py-1.5 md:py-2 md:px-4 rounded-xl cursor-pointer transition-all ${
+            activeTab === 'graph' 
+              ? 'text-indigo-400 font-semibold md:bg-indigo-500/10' 
+              : 'text-gray-500 hover:text-gray-300 md:text-gray-400 md:hover:text-white md:hover:bg-slate-800/50'
+          }`}
         >
           <Network size={20} />
-          <span className="text-[10px]">Network</span>
+          <span className="text-[10px] md:text-sm">Network</span>
         </button>
 
         <button 
           onClick={() => setActiveTab('profile')}
-          className={`flex flex-col items-center gap-1 cursor-pointer transition-colors ${activeTab === 'profile' ? 'text-indigo-400 font-semibold' : 'text-gray-500 hover:text-gray-300'}`}
+          className={`flex flex-col md:flex-row items-center gap-1 md:gap-2.5 px-3 py-1.5 md:py-2 md:px-4 rounded-xl cursor-pointer transition-all ${
+            activeTab === 'profile' 
+              ? 'text-indigo-400 font-semibold md:bg-indigo-500/10' 
+              : 'text-gray-500 hover:text-gray-300 md:text-gray-400 md:hover:text-white md:hover:bg-slate-800/50'
+          }`}
         >
-          <User size={20} className="rounded-full border border-current p-0.5" />
-          <span className="text-[10px]">Account</span>
+          <User size={20} className="rounded-full border border-current p-0.5 shrink-0" />
+          <span className="text-[10px] md:text-sm">Account</span>
         </button>
       </nav>
     </div>

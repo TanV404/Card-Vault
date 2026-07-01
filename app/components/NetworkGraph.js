@@ -52,7 +52,7 @@ export default function NetworkGraph({ cards }) {
 
     // 2. Setup Dimensions
     const width = containerRef.current.clientWidth || 400;
-    const height = 480;
+    const height = 550;
 
     const svg = d3.select(svgRef.current)
       .attr('width', width)

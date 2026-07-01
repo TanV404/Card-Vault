@@ -33,6 +33,14 @@ export async function POST(request) {
 
     const user = users[0];
 
+    // Check if the user signed up with Google OAuth and has no password hash
+    if (!user.password_hash) {
+      return NextResponse.json(
+        { error: 'Google Sign-In is no longer supported. Please register a new credentials-based account.' },
+        { status: 400 }
+      );
+    }
+
     // Verify password
     const isPasswordValid = await bcryptjs.compare(password, user.password_hash);
 

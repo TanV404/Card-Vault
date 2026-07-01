@@ -206,7 +206,7 @@ export default function ContactsTab({ cards, onUpdateCard, onDeleteCard }) {
       </div>
 
       {/* Cards List Grid */}
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence mode="popLayout">
           {sortedCards.map((card) => {
             const isExpanded = expandedId === card.id;

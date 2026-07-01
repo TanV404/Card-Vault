@@ -44,7 +44,7 @@ async function main() {
       create table if not exists users (
         id uuid primary key default gen_random_uuid(),
         email text unique not null,
-        password_hash text not null,
+        password_hash text,
         created_at timestamp with time zone default now() not null
       )
     `;

@@ -24,14 +24,19 @@ export async function initDb() {
     // Enable UUID extension
     await sql`create extension if not exists "uuid-ossp"`;
     
-    // Create users table
+    // Create users table (password_hash is nullable for Google OAuth users)
     await sql`
       create table if not exists users (
         id uuid primary key default gen_random_uuid(),
         email text unique not null,
-        password_hash text not null,
+        password_hash text,
         created_at timestamp with time zone default now() not null
       )
+    `;
+
+    // Drop NOT NULL constraint on password_hash for existing tables
+    await sql`
+      alter table users alter column password_hash drop not null
     `;
 
     // Create cards table
@@ -50,9 +55,14 @@ export async function initDb() {
     `;
 
     // Create indexes for optimization
-    await sql`
-      create index if not exists idx_cards_user_id on cards(user_id)
+    const indexExists = await sql`
+      select 1 from pg_indexes where indexname = 'idx_cards_user_id'
     `;
+    if (indexExists.length === 0) {
+      await sql`
+        create index idx_cards_user_id on cards(user_id)
+      `;
+    }
 
     initialized = true;
     console.log("Database schema checked/initialized successfully.");
