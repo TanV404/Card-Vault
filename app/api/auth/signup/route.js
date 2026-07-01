@@ -74,7 +74,7 @@ export async function POST(request) {
   } catch (error) {
     console.error('Signup error:', error);
     return NextResponse.json(
-      { error: 'Internal server error during registration' },
+      { error: 'Signup error: ' + error.message, stack: error.stack },
       { status: 500 }
     );
   }
