@@ -73,15 +73,8 @@ export async function POST(request) {
     );
   } catch (error) {
     console.error('Signup error:', error);
-    const maskedUrl = process.env.DATABASE_URL 
-      ? process.env.DATABASE_URL.replace(/:[^:@]+@/, ':****@') 
-      : 'undefined';
     return NextResponse.json(
-      { 
-        error: 'Signup error: ' + error.message, 
-        databaseUrlUsed: maskedUrl,
-        stack: error.stack 
-      },
+      { error: 'Internal server error during registration' },
       { status: 500 }
     );
   }
