@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@supabase/supabase-js": "^2.89.0",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.110.0",
     "@swc/helpers": "^0.5.23",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
